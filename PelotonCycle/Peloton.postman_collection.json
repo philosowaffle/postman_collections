@@ -1,0 +1,477 @@
+{
+	"info": {
+		"name": "Peloton",
+		"_postman_id": "556f4234-bff4-c265-71d4-57ac19eeeb15",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "02a4f785-68ed-44c2-9926-5fb1848f1b88",
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.environment.set(\"UserId\", jsonData.user_id);",
+							"pm.environment.set(\"SessionId\", jsonData.session_id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"password\": \"{{Password}}\",\n\t\"username_or_email\": \"{{Email}}\"\n}"
+				},
+				"url": {
+					"raw": "https://api.pelotoncycle.com/auth/login",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pelotoncycle",
+						"com"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				},
+				"description": "Authenticate and setup Peloton Session"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Workouts",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ed6bac3e-fda4-464d-9ad4-e04709b97234",
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "152f8ad7-9b0e-42fd-b77b-1ffd376e36cb",
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var data = jsonData.data;",
+							"",
+							"console.log(data);",
+							"",
+							"if ( data.length > 0)",
+							"{",
+							"    var lastWorkoutId = data[0].id;",
+							"    console.log(\"Getting first workout id: \" + lastWorkoutId);",
+							"    pm.environment.set(\"WorkoutId\", lastWorkoutId);",
+							"}",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "peloton_session_id={{SessionId}}"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.pelotoncycle.com/api/user/{{UserId}}/workouts?joins=peloton.ride&limit=2&page=0&sort_by=-created",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pelotoncycle",
+						"com"
+					],
+					"path": [
+						"api",
+						"user",
+						"{{UserId}}",
+						"workouts"
+					],
+					"query": [
+						{
+							"key": "joins",
+							"value": "peloton.ride",
+							"equals": true
+						},
+						{
+							"key": "limit",
+							"value": "2",
+							"equals": true
+						},
+						{
+							"key": "page",
+							"value": "0",
+							"equals": true
+						},
+						{
+							"key": "sort_by",
+							"value": "-created",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Workout By Id",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ed6bac3e-fda4-464d-9ad4-e04709b97234",
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "b4da813c-ad28-4a56-a381-6e8ffb7fb558",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "peloton_session_id={{SessionId}}"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.pelotoncycle.com/api/workout/{{WorkoutId}}?joins=peloton,peloton.ride,peloton.ride.instructor,user",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pelotoncycle",
+						"com"
+					],
+					"path": [
+						"api",
+						"workout",
+						"{{WorkoutId}}"
+					],
+					"query": [
+						{
+							"key": "joins",
+							"value": "peloton,peloton.ride,peloton.ride.instructor,user",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Workout Achievements",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ed6bac3e-fda4-464d-9ad4-e04709b97234",
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "b4da813c-ad28-4a56-a381-6e8ffb7fb558",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "peloton_session_id={{SessionId}}"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.pelotoncycle.com/api/workout/{{WorkoutId}}/achievements",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pelotoncycle",
+						"com"
+					],
+					"path": [
+						"api",
+						"workout",
+						"{{WorkoutId}}",
+						"achievements"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Workout Summary",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ed6bac3e-fda4-464d-9ad4-e04709b97234",
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "b4da813c-ad28-4a56-a381-6e8ffb7fb558",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "peloton_session_id={{SessionId}}"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.pelotoncycle.com/api/workout/{{WorkoutId}}/summary",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pelotoncycle",
+						"com"
+					],
+					"path": [
+						"api",
+						"workout",
+						"{{WorkoutId}}",
+						"summary"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Workout Samples",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ed6bac3e-fda4-464d-9ad4-e04709b97234",
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "b4da813c-ad28-4a56-a381-6e8ffb7fb558",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "peloton_session_id={{SessionId}}"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.pelotoncycle.com/api/workout/{{WorkoutId}}/sample?every_n=5&fields=seconds_since_pedaling_start,power,cadence,speed,heart_rate,distance&limit=14400",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pelotoncycle",
+						"com"
+					],
+					"path": [
+						"api",
+						"workout",
+						"{{WorkoutId}}",
+						"sample"
+					],
+					"query": [
+						{
+							"key": "every_n",
+							"value": "5",
+							"equals": true
+						},
+						{
+							"key": "fields",
+							"value": "seconds_since_pedaling_start,power,cadence,speed,heart_rate,distance",
+							"equals": true
+						},
+						{
+							"key": "limit",
+							"value": "14400",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Me",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ed6bac3e-fda4-464d-9ad4-e04709b97234",
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "b4da813c-ad28-4a56-a381-6e8ffb7fb558",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "peloton_session_id={{SessionId}}"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.pelotoncycle.com/api/me",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pelotoncycle",
+						"com"
+					],
+					"path": [
+						"api",
+						"me"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
