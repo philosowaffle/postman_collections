@@ -1,0 +1,43 @@
+{
+	"info": {
+		"name": "Etsy",
+		"_postman_id": "3981e3a1-06d0-4c90-e14b-0af25a5f3640",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Listings For Shop",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://openapi.etsy.com/v2/shops/{{SHOP_NAME}}/listings/active?api_key={{API_KEY}}",
+					"protocol": "https",
+					"host": [
+						"openapi",
+						"etsy",
+						"com"
+					],
+					"path": [
+						"v2",
+						"shops",
+						"{{SHOP_NAME}}",
+						"listings",
+						"active"
+					],
+					"query": [
+						{
+							"key": "api_key",
+							"value": "{{API_KEY}}",
+							"equals": true
+						}
+					]
+				},
+				"description": "Get listings for a specific shop."
+			},
+			"response": []
+		}
+	]
+}
