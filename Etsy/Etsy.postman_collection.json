@@ -1,19 +1,282 @@
 {
 	"info": {
-		"name": "Etsy",
 		"_postman_id": "3981e3a1-06d0-4c90-e14b-0af25a5f3640",
-		"description": "",
+		"name": "Etsy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Listings For Shop",
+			"name": "OAuth Part 01",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "54a81a81-0aec-44dc-8384-f44c54c5ea97",
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"var responseBody = pm.response.text();",
+							"var parsedResponse = responseBody.split(\"=\");",
+							"",
+							"var oauth_token = parsedResponse[2].split(\"&\")[0];",
+							"var oauth_token_secret = parsedResponse[3].split(\"&\")[0];",
+							"",
+							"var url = responseBody.split(\"login_url=\")[1];",
+							"var urlEncoded = url.split(\"&\")[0];",
+							"var decoded = decodeURIComponent(urlEncoded);",
+							"var newUrl = decoded + \"&\" + url.split(\"&\")[1];",
+							"",
+							"pm.environment.set(\"LOGIN_URL\", newUrl);",
+							"pm.environment.set(\"OAUTH_TOKEN\", oauth_token);",
+							"pm.environment.set(\"OAUTH_TOKEN_SECRET\", oauth_token_secret);",
+							""
+						]
+					}
+				}
+			],
 			"request": {
+				"auth": {
+					"type": "oauth1",
+					"oauth1": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "addEmptyParamsToSign",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "addParamsToHeader",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "consumerSecret",
+							"value": "{{API_SHARED_SECRET}}",
+							"type": "string"
+						},
+						{
+							"key": "consumerKey",
+							"value": "{{API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "signatureMethod",
+							"value": "HMAC-SHA1",
+							"type": "string"
+						},
+						{
+							"key": "version",
+							"value": "1.0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "oauth_callback",
+							"value": "\"oob\"",
+							"description": "",
+							"type": "text",
+							"warning": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "https://openapi.etsy.com/v2/oauth/request_token?scope=listings_r listings_w transactions_r billing_r",
+					"protocol": "https",
+					"host": [
+						"openapi",
+						"etsy",
+						"com"
+					],
+					"path": [
+						"v2",
+						"oauth",
+						"request_token"
+					],
+					"query": [
+						{
+							"key": "include_private",
+							"value": "true",
+							"warning": "",
+							"disabled": true
+						},
+						{
+							"key": "oauth_callback",
+							"value": "24.27.81.227",
+							"warning": "",
+							"disabled": true
+						},
+						{
+							"key": "scope",
+							"value": "listings_r listings_w transactions_r billing_r"
+						}
+					]
+				},
+				"description": "[Etsy Docs](https://www.etsy.com/developers/documentation/getting_started/oauth#section_introduction)\n\nIssue this request to obtain a temporary token.\nCheck for new Environment variable `login_url`.  Navigate to this url and authorize the app.  Copy the provided token and go to OAuth Part 02."
+			},
+			"response": []
+		},
+		{
+			"name": "OAuth Part 02",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5b33fc1a-4779-46a5-ad80-ce8c086712fa",
+						"type": "text/javascript",
+						"exec": [
+							"var responseBody = pm.response.text();",
+							"var parsedResponse = responseBody.split(\"&\");",
+							"",
+							"var oauth_token = parsedResponse[0].split(\"=\")[1];",
+							"var oauth_token_secret = parsedResponse[1].split(\"=\")[1];",
+							"",
+							"pm.environment.set(\"OAUTH_TOKEN\", oauth_token);",
+							"pm.environment.set(\"OAUTH_TOKEN_SECRET\", oauth_token_secret);"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth1",
+					"oauth1": [
+						{
+							"key": "tokenSecret",
+							"value": "{{OAUTH_TOKEN_SECRET}}",
+							"type": "string"
+						},
+						{
+							"key": "token",
+							"value": "{{OAUTH_TOKEN}}",
+							"type": "string"
+						},
+						{
+							"key": "consumerSecret",
+							"value": "{{API_SHARED_SECRET}}",
+							"type": "string"
+						},
+						{
+							"key": "consumerKey",
+							"value": "{{API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "addEmptyParamsToSign",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "addParamsToHeader",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "signatureMethod",
+							"value": "HMAC-SHA1",
+							"type": "string"
+						},
+						{
+							"key": "version",
+							"value": "1.0",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "https://openapi.etsy.com/v2/shops/{{SHOP_NAME}}/listings/active?api_key={{API_KEY}}",
+					"raw": "https://openapi.etsy.com/v2/oauth/access_token?oauth_verifier=07a09e2e",
+					"protocol": "https",
+					"host": [
+						"openapi",
+						"etsy",
+						"com"
+					],
+					"path": [
+						"v2",
+						"oauth",
+						"access_token"
+					],
+					"query": [
+						{
+							"key": "oauth_verifier",
+							"value": "07a09e2e"
+						}
+					]
+				},
+				"description": "Takes supplied temp token and secret from OAuth Part 01 and requests and get offical access tokens.\n\nGo to the login_url that was set in the env variables and authorize access manually.  The copy past the provided token into the oauth_verifier query param."
+			},
+			"response": []
+		},
+		{
+			"name": "Active Shop Listings",
+			"request": {
+				"auth": {
+					"type": "oauth1",
+					"oauth1": [
+						{
+							"key": "tokenSecret",
+							"value": "{{OAUTH_TOKEN_SECRET}}",
+							"type": "string"
+						},
+						{
+							"key": "token",
+							"value": "{{OAUTH_TOKEN}}",
+							"type": "string"
+						},
+						{
+							"key": "consumerSecret",
+							"value": "{{API_SHARED_SECRET}}",
+							"type": "string"
+						},
+						{
+							"key": "consumerKey",
+							"value": "{{API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "signatureMethod",
+							"value": "HMAC-SHA1",
+							"type": "string"
+						},
+						{
+							"key": "version",
+							"value": "1.0",
+							"type": "string"
+						},
+						{
+							"key": "addParamsToHeader",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "addEmptyParamsToSign",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://openapi.etsy.com/v2/shops/{{SHOP_NAME}}/listings/active?limit=100&page=2&include_private=1",
 					"protocol": "https",
 					"host": [
 						"openapi",
@@ -31,11 +294,119 @@
 						{
 							"key": "api_key",
 							"value": "{{API_KEY}}",
-							"equals": true
+							"warning": "",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "100"
+						},
+						{
+							"key": "page",
+							"value": "2"
+						},
+						{
+							"key": "include_private",
+							"value": "1"
 						}
 					]
 				},
-				"description": "Get listings for a specific shop."
+				"description": "Get listings for a specific shop.\n\n[Docs](https://www.etsy.com/developers/documentation/reference/listing#method_findallshoplistingsactive)"
+			},
+			"response": []
+		},
+		{
+			"name": "Shop Transactions",
+			"request": {
+				"auth": {
+					"type": "oauth1",
+					"oauth1": [
+						{
+							"key": "tokenSecret",
+							"value": "{{OAUTH_TOKEN_SECRET}}",
+							"type": "string"
+						},
+						{
+							"key": "token",
+							"value": "{{OAUTH_TOKEN}}",
+							"type": "string"
+						},
+						{
+							"key": "consumerSecret",
+							"value": "{{API_SHARED_SECRET}}",
+							"type": "string"
+						},
+						{
+							"key": "consumerKey",
+							"value": "{{API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "signatureMethod",
+							"value": "HMAC-SHA1",
+							"type": "string"
+						},
+						{
+							"key": "version",
+							"value": "1.0",
+							"type": "string"
+						},
+						{
+							"key": "addParamsToHeader",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "addEmptyParamsToSign",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://openapi.etsy.com/v2/shops/{{SHOP_NAME}}/transactions/?limit=100",
+					"protocol": "https",
+					"host": [
+						"openapi",
+						"etsy",
+						"com"
+					],
+					"path": [
+						"v2",
+						"shops",
+						"{{SHOP_NAME}}",
+						"transactions",
+						""
+					],
+					"query": [
+						{
+							"key": "api_key",
+							"value": "{{API_KEY}}",
+							"warning": "",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "100"
+						},
+						{
+							"key": "page",
+							"value": "2",
+							"warning": "",
+							"disabled": true
+						},
+						{
+							"key": "include_private",
+							"value": "true",
+							"warning": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Get transactions for a specific shop.\n\n[Docs](https://www.etsy.com/developers/documentation/reference/transaction#method_findallshoptransactions)"
 			},
 			"response": []
 		}
