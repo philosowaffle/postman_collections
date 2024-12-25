@@ -1,0 +1,51 @@
+meta {
+  name: OAuth Part 01
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://openapi.etsy.com/v2/oauth/request_token?scope=listings_r listings_w transactions_r billing_r
+  body: formUrlEncoded
+  auth: none
+}
+
+params:query {
+  scope: listings_r listings_w transactions_r billing_r
+  ~include_private: true
+  ~oauth_callback: 24.27.81.227
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+}
+
+body:form-urlencoded {
+  oauth_callback: "oob"
+}
+
+tests {
+  
+  var responseBody = res.getBody()?.toString();
+  var parsedResponse = responseBody.split("=");
+  
+  var oauth_token = parsedResponse[2].split("&")[0];
+  var oauth_token_secret = parsedResponse[3].split("&")[0];
+  
+  var url = responseBody.split("login_url=")[1];
+  var urlEncoded = url.split("&")[0];
+  var decoded = decodeURIComponent(urlEncoded);
+  var newUrl = decoded + "&" + url.split("&")[1];
+  
+  bru.setEnvVar("LOGIN_URL", newUrl);
+  bru.setEnvVar("OAUTH_TOKEN", oauth_token);
+  bru.setEnvVar("OAUTH_TOKEN_SECRET", oauth_token_secret);
+  
+}
+
+docs {
+  [Etsy Docs](https://www.etsy.com/developers/documentation/getting_started/oauth#section_introduction)
+  
+  Issue this request to obtain a temporary token.
+  Check for new Environment variable `login_url`.  Navigate to this url and authorize the app.  Copy the provided token and go to OAuth Part 02.
+}

@@ -1,0 +1,30 @@
+meta {
+  name: Get Workout Samples
+  type: http
+  seq: 6
+}
+
+get {
+  url: https://api.pelotoncycle.com/api/workout/{{WorkoutId}}/sample?every_n=5&fields=seconds_since_pedaling_start,power,cadence,speed,heart_rate,distance&limit=14400
+  body: none
+  auth: none
+}
+
+params:query {
+  every_n: 5
+  fields: seconds_since_pedaling_start,power,cadence,speed,heart_rate,distance
+  limit: 14400
+}
+
+headers {
+  Cookie: peloton_session_id={{SessionId}}
+  ~: 
+}
+
+script:pre-request {
+  
+  
+  
+  
+  
+}

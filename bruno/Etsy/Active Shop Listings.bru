@@ -1,0 +1,24 @@
+meta {
+  name: Active Shop Listings
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://openapi.etsy.com/v2/shops/{{SHOP_NAME}}/listings/active?limit=100&page=2&include_private=1
+  body: none
+  auth: none
+}
+
+params:query {
+  limit: 100
+  page: 2
+  include_private: 1
+  ~api_key: {{API_KEY}}
+}
+
+docs {
+  Get listings for a specific shop.
+  
+  [Docs](https://www.etsy.com/developers/documentation/reference/listing#method_findallshoplistingsactive)
+}

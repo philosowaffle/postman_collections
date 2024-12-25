@@ -1,0 +1,24 @@
+meta {
+  name: Shop Transactions
+  type: http
+  seq: 4
+}
+
+get {
+  url: https://openapi.etsy.com/v2/shops/{{SHOP_NAME}}/transactions/?limit=100
+  body: none
+  auth: none
+}
+
+params:query {
+  limit: 100
+  ~api_key: {{API_KEY}}
+  ~page: 2
+  ~include_private: true
+}
+
+docs {
+  Get transactions for a specific shop.
+  
+  [Docs](https://www.etsy.com/developers/documentation/reference/transaction#method_findallshoptransactions)
+}

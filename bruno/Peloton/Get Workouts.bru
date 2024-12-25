@@ -1,0 +1,47 @@
+meta {
+  name: Get Workouts
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://api.pelotoncycle.com/api/user/{{UserId}}/workouts?joins=peloton.ride&limit=2&page=0&sort_by=-created
+  body: none
+  auth: none
+}
+
+params:query {
+  joins: peloton.ride
+  limit: 2
+  page: 0
+  sort_by: -created
+}
+
+headers {
+  Cookie: peloton_session_id={{SessionId}}
+  ~: 
+}
+
+script:pre-request {
+  
+  
+  
+  
+  
+}
+
+tests {
+  var jsonData = JSON.parse(responseBody);
+  var data = jsonData.data;
+  
+  console.log(data);
+  
+  if ( data.length > 0)
+  {
+      var lastWorkoutId = data[0].id;
+      console.log("Getting first workout id: " + lastWorkoutId);
+      bru.setEnvVar("WorkoutId", lastWorkoutId);
+  }
+  
+  
+}

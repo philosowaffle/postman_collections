@@ -1,0 +1,33 @@
+meta {
+  name: Auth
+  type: http
+  seq: 1
+}
+
+post {
+  url: https://api.pelotoncycle.com/auth/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+  	"password": "{{Password}}",
+  	"username_or_email": "{{Email}}"
+  }
+}
+
+tests {
+  var jsonData = JSON.parse(responseBody);
+  
+  bru.setEnvVar("UserId", jsonData.user_id);
+  bru.setEnvVar("SessionId", jsonData.session_id);
+}
+
+docs {
+  Authenticate and setup Peloton Session
+}

@@ -1,0 +1,28 @@
+meta {
+  name: Get Workout By Id
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://api.pelotoncycle.com/api/workout/{{WorkoutId}}?joins=peloton,peloton.ride,peloton.ride.instructor,user
+  body: none
+  auth: none
+}
+
+params:query {
+  joins: peloton,peloton.ride,peloton.ride.instructor,user
+}
+
+headers {
+  Cookie: peloton_session_id={{SessionId}}
+  ~: 
+}
+
+script:pre-request {
+  
+  
+  
+  
+  
+}

@@ -1,0 +1,32 @@
+meta {
+  name: OAuth Part 02
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://openapi.etsy.com/v2/oauth/access_token?oauth_verifier=07a09e2e
+  body: none
+  auth: none
+}
+
+params:query {
+  oauth_verifier: 07a09e2e
+}
+
+tests {
+  var responseBody = res.getBody()?.toString();
+  var parsedResponse = responseBody.split("&");
+  
+  var oauth_token = parsedResponse[0].split("=")[1];
+  var oauth_token_secret = parsedResponse[1].split("=")[1];
+  
+  bru.setEnvVar("OAUTH_TOKEN", oauth_token);
+  bru.setEnvVar("OAUTH_TOKEN_SECRET", oauth_token_secret);
+}
+
+docs {
+  Takes supplied temp token and secret from OAuth Part 01 and requests and get offical access tokens.
+  
+  Go to the login_url that was set in the env variables and authorize access manually.  The copy past the provided token into the oauth_verifier query param.
+}

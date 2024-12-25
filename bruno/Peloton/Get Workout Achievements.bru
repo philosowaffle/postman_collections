@@ -1,0 +1,24 @@
+meta {
+  name: Get Workout Achievements
+  type: http
+  seq: 4
+}
+
+get {
+  url: https://api.pelotoncycle.com/api/workout/{{WorkoutId}}/achievements
+  body: none
+  auth: none
+}
+
+headers {
+  Cookie: peloton_session_id={{SessionId}}
+  ~: 
+}
+
+script:pre-request {
+  
+  
+  
+  
+  
+}
